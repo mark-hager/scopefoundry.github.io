@@ -4,7 +4,7 @@
 
 ## Tutorials
 
-### [Build Your First Microscope](./build_your_first_microscope)
+### [Build Your First Microscope](./building_your_first_microscope)
 
 
 
