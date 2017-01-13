@@ -1,9 +1,17 @@
-![Logo](scopefoundry_logo.png)
+# ScopeFoundry
+
+A Python platform for controlling custom laboratory experiments and visualizing scientific data
+
+<center>![Logo](logo/scopefoundry_logo2_189.png)</center>
 
 
-GitHub project page: https://github.com/ScopeFoundry/
+GitHub page: <https://github.com/ScopeFoundry/>
 
 
+## Documentation
+
+* [Key Concepts](key_concepts.html)
+* [Advanced Development](advanced_dev.html)
 
 ## Tutorials
 
@@ -11,9 +19,8 @@ GitHub project page: https://github.com/ScopeFoundry/
 
 
 ### [Build a Data Browser Viewer][databrowser_link]
-[![ Image of the DataBrower ](databrowse_1.png)][databrowser_link]
+[<img src='databrowse_1.png' width=400px>)][databrowser_link]
 
 [databrowser_link]: ./databrowser_view_tutorial.html
 
 
-### [Advanced Development](advanced_dev.html)
