@@ -2,7 +2,7 @@
 
 A Python platform for controlling custom laboratory experiments and visualizing scientific data
 
-<center>![Logo](logo/scopefoundry_logo2_189.png)</center>
+![Logo](logo/scopefoundry_logo2_189.png)
 
 
 GitHub page: <https://github.com/ScopeFoundry/>
@@ -19,7 +19,7 @@ GitHub page: <https://github.com/ScopeFoundry/>
 
 
 ### [Build a Data Browser Viewer][databrowser_link]
-[<img src='databrowse_1.png' width=400px>)][databrowser_link]
+[<img src='databrowse_1.png' width=400px>][databrowser_link]
 
 [databrowser_link]: ./databrowser_view_tutorial.html
 
