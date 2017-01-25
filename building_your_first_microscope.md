@@ -14,7 +14,7 @@ Note: We recommend the [Anaconda][anaconda_dl] python distribution, which contai
 
 * Create an [conda environment](http://conda.pydata.org/docs/using/envs.html) includes ScopeFoundry and its dependencies. Open an Anaconda prompt and run the following commands:
 
-```
+```sh
 $ conda create -n scopefoundry python=3.5
 $ source activate scopefoundry
 (scopefoundry) $ conda install numpy pyqt qtpy h5py
@@ -117,19 +117,54 @@ Run your app:
 python fancy_microscope_app.py
 ```
 
-[Image of GUI]
+![microscope_gui](microscope.png)
 
 
-* Connect to hardware
-* Setup measurement conditions
-* Run measurement
+In this graphical interface we do the following
+
+* Connect to hardware (here our dummy `random_gen` plug-in)
+* Setup measurement conditions (How often we sample the data)
+* Run measurement and plot the data flowing in
 
 
 
 Step 5: Analyze Data
 --------------------
+[HDFView]: https://support.hdfgroup.org/products/java/hdfview/
+[HDF Group]: https://www.hdfgroup.org/
+[h5py]: http://www.h5py.org
 
-The measurement will auto-save a data-file that contains the optimizer history to an HDF5 (.h5) data file. This data file contains the data along with data structures that include all the meta data from the microscope App. To view this data file, we can use a graphical viewer [HDFView](https://support.hdfgroup.org/products/java/hdfview/) provided by the [HDF Group](https://www.hdfgroup.org/).
+The measurement will auto-save a data-file that contains the optimizer history to an HDF5 (.h5) data file within the specified Save Directory. This data file contains the data along with data structures that include all the meta-data from the microscope App. To view this data file, we can use a graphical viewer [HDFView] provided by the [HDF Group].
+
+{ Show H5 Hierarchy}
+
+We can access this data file in Python using the [h5py] package.
+
+```python
+import h5py
+
+dat = h5py.File('123123123_rand_gen_optimizer.h5', 'r')
+
+sample_name = dat['app'].attrs['sample']
+print(sample_name)
+
+optimizer_data = dat['measurements/rand_gen_optimizer/optimizer_history']
+
+import matplotlib.pyplot as plt
+plt.plot( optimizer_data)
+
+```
+
+
+## Next Steps
+
+See these tutorials for a more detailed look into how to customize your microscope with ScopeFoundry: 
+
+* ScopeFoundry [Key Concepts](key_concepts.md)
+* Build a custom Measurement
+* Build a custom [Hardware plugin](building_a_custom_hardware_plugin.md)
+* Build a custom [Data Browser View]((./databrowser_view_tutorial.md)) for your data files
+* Create a custom side bar
 
 
 ## Where to Find Out More
@@ -141,11 +176,3 @@ For questions about this tutorial or ScopeFoundry in general, please visit and p
 For source code of all ScopeFoundry projects visit our [GitHub page](https://github.com/scopefoundry/).
 
 
-
-Next Steps
-----------
-
-* Build a custom measurement
-* Build a custom hardware plugin
-* [Build a custom viewer for data-file](./databrowser_view_tutorial.html)
-* Create a custom side bar
