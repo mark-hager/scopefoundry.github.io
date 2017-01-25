@@ -2,6 +2,7 @@
 
 Here we discuss how to build a custom hardware plug-in for ScopeFoundry. If one is not available in our list of plug-ins, you can build one based on this tutorial. We will do this through 3 sections: First make a low-level python interface to the device, second write a ScopeFoundry `HardwareComponent`, and finally package up the result to share with the ScopeFoundry project and other users.
 
+![diagram](key_concepts/slide09.png)
 
 ## Low-level device interface
 

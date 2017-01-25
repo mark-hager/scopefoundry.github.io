@@ -24,21 +24,27 @@ Uses:
 
 ## Documentation
 
-* [Key Concepts](key_concepts.md)
+* [Key Concepts](key_concepts/key_concepts.md)
 * [Advanced Development](advanced_dev.md)
+* [Demo Videos](video_demos.md)
 
 ## Tutorials
 
-### [Build Your First Microscope](./building_your_first_microscope.md)
+[1st_microscope]: ./building_your_first_microscope.md
+[measure_tut]: ./custom_measurement.md
+[hw_tut]: ./building_a_custom_hardware_plugin.md
+[databrowser_tut]: ./databrowser_view_tutorial.md
 
-### [Build a Hardware Plug-in](./building_a_custom_hardware_plugin.md)
-
-### [Build a Data Browser Viewer][databrowser_link]
-[<img src='databrowse_1.png'>][databrowser_link]
-
-[databrowser_link]: ./databrowser_view_tutorial.md
+* [Your First Microscope][1st_microscope]
+* [Custom Measurements][measure_tut]
+* [Hardware Plug-in][hw_tut]
+* [Data Browser Viewer][databrowser_tut]
 
 
 
+[![data_browse_img](microscope_400.png)][1st_microscope]
+[![measure_dia](./measure_diagram.png)][measure_tut]
+[![hw_diagram](./hw_plugin_diagram.png)][hw_tut]
+[![data_browse_img](databrowse_1_400.png)][databrowser_tut]
 
 
