@@ -11,7 +11,7 @@ GitHub page: <https://github.com/ScopeFoundry/>
 
 An open-source alternative to LabView or MATLAB instrument control.
 
-* Modular, multi-threaded Python graphical interface allows for fast data acquisition and visualization 
+* Modular, cross-platform Python graphical interface allows for fast data acquisition and visualization 
 * Build lab equipment graphical interfaces grapically with QT
 * Live updates of measurement code for fast development and debugging
 * Hardware plug-ins for simple and complex scientific equipment
