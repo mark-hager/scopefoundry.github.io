@@ -1,14 +1,38 @@
-DataBrowser View Plug-in Tutorial
-=================================
+# DataBrowser View Plug-in Tutorial
 
-ScopeFoundry provides a DataBrowserApp that makes it easy for a user to explore a set of experiemental results on their computer. It is a plug-in based application, where data-type plug-ins, ie a `View`, can show relevant information about the data file. The [FoundryDataBrowser](https://github.com/ScopeFoundry/FoundryDataBrowser) project is an example of the ScopeFoundry DataBrowser with a number of Views used to browse experiemental data the Molecular Foundry.
+[FoundryDataBrowser]: https://github.com/ScopeFoundry/FoundryDataBrowser
+
+ScopeFoundry provides a DataBrowserApp that makes it easy for a user to explore a set of experiemental results on their computer. It is a plug-in based application, where data-type plug-ins (a `DataBrowserView`) can show relevant data within the file. The [FoundryDataBrowser] project is an example of the ScopeFoundry DataBrowser with a number of Views used to browse common experiemental data the Molecular Foundry.
 
 ![ Image of the DataBrower ](databrowse_1.png)
 
+## Setup
 
-Lets define a custom view. We do this by subclassing the DataBrowserView class. Three methods should be defined `setup()`, `is_file_supported`, and `on_change_data_filename`.
+[anaconda_dl]: https://www.continuum.io/downloads
 
-Here is an example of a simple dataviewer that uses a PyQtGraph ImageView to display an image loaded via scipy:
+Note: We recommend the [Anaconda][anaconda_dl] python distribution, which contains many easy to install scientific python packages.
+
+
+* Download and Install [Anaconda][anaconda_dl]. Recommended python version is 3.5, but 2.7 will also work.
+
+* Create an [conda environment](http://conda.pydata.org/docs/using/envs.html) includes ScopeFoundry and its dependencies. Open an Anaconda prompt and run the following commands:
+
+```
+$ conda create -n scopefoundry python=3.5
+$ source activate scopefoundry 
+(scopefoundry) $ conda install numpy pyqt qtpy h5py
+(scopefoundry) $ pip install pyqtgraph
+(scopefoundry) $ pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
+```	
+
+Note: On Windows `source activate scopefoundry` should be replaced by `activate scopefoundry`
+
+
+## Defining a DataBrowserView
+
+Lets define a custom view. We do this by subclassing the DataBrowserView class. Three methods should be defined `setup()`, `is_file_supported()`, and `on_change_data_filename()`.
+
+Here is an example of a simple dataviewer that uses a PyQtGraph ImageView to display an image loaded via scipy (this file is called `views/images.py` in [FoundryDataBrowser][FoundryDataBrowserRepo]):
 
 ```python
 from ScopeFoundry.data_browser import DataBrowserView
@@ -21,6 +45,7 @@ import os
 
 class ScipyImreadView(DataBrowserView):
 
+    # This name is used in the GUI for the DataBrowser
     name = 'scipy_imread_view'
     
     def setup(self):
@@ -31,7 +56,7 @@ class ScipyImreadView(DataBrowserView):
     def is_file_supported(self, fname):
     	 # Tells the DataBrowser whether this plug-in would likely be able
     	 # to read the given file name
-    	 # here we are using the 
+    	 # here we are using the file extension to make a guess
         _, ext = os.path.splitext(fname)
         return ext.lower() in ['.png', '.tif', '.tiff', '.jpg']
 
@@ -49,6 +74,8 @@ class ScipyImreadView(DataBrowserView):
             	"failed to load %s:\n%s" %(fname, err))
             raise(err)
 ```
+
+## Running your DataBrowser
 
 To use this view you can create a DataBrowser script like this:
 
@@ -71,3 +98,12 @@ sys.exit(app.exec_())
 Here is a resulting screen shot of running this data browser script and navigating to a folder with TIFF images.
 
 ![ Image of the DataBrower ](databrowse_2.png)
+
+
+## Where to Find More
+
+This example is part of the [FoundryDataBrowser] repository. There are many more examples of DataBrowserViews available for download there.
+
+For questions about this tutorial or ScopeFoundry in general, please visit and post on the ScopeFoundry [project mailing list / forum](https://groups.google.com/forum/#!forum/scopefoundry)
+
+For Source Code of all ScopeFoundry sub-projects visit our [GitHub page](https://github.com/scopefoundry/)

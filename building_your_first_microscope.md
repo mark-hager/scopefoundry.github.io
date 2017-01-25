@@ -22,6 +22,8 @@ $ source activate scopefoundry
 (scopefoundry) $ pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
 ```	
 
+Note: On Windows `source activate scopefoundry` should be replaced by `activate scopefoundry`
+
 Step 2: Create your Microscope App
 ----------------------------------
 
@@ -130,6 +132,13 @@ Step 5: Analyze Data
 The measurement will auto-save a data-file that contains the optimizer history to an HDF5 (.h5) data file. This data file contains the data along with data structures that include all the meta data from the microscope App. To view this data file, we can use a graphical viewer [HDFView](https://support.hdfgroup.org/products/java/hdfview/) provided by the [HDF Group](https://www.hdfgroup.org/).
 
 
+## Where to Find Out More
+
+This tutorial code is available in the [HW\_random\_gen](https://github.com/scopefoundry/HW_random_gen/) repository.
+
+For questions about this tutorial or ScopeFoundry in general, please visit and post on the ScopeFoundry [project mailing list and forum](https://groups.google.com/forum/#!forum/scopefoundry).
+
+For source code of all ScopeFoundry projects visit our [GitHub page](https://github.com/scopefoundry/).
 
 
 
