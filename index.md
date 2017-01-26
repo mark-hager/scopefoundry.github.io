@@ -9,6 +9,8 @@ GitHub page: <https://github.com/ScopeFoundry/>
 
 ## Why ScopeFoundry?
 
+![Microscope](microscope.png)
+
 An open-source alternative to LabView or MATLAB instrument control.
 
 * Modular, cross-platform Python graphical interface allows for fast data acquisition and visualization 
