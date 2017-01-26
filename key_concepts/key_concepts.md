@@ -9,7 +9,7 @@ An example in our lab:
 ![microscope](./Slide03.png)
 ![equip list](./Slide04.png)
 
-##Components Needed for Microscope Software
+## Components Needed for Microscope Software
 
 ![components](./Slide05.png)
 
