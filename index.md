@@ -29,6 +29,7 @@ Uses:
 * [Key Concepts](key_concepts/key_concepts.md)
 * [Advanced Development](advanced_dev.md)
 * [Demo Videos](video_demos.md)
+* [API Documentation](api_html/index.html)
 
 ## Tutorials
 

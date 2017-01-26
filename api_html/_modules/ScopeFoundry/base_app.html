@@ -1,0 +1,539 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ScopeFoundry.base_app &#8212; ScopeFoundry 0.0.1dev1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1dev1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ScopeFoundry 0.0.1dev1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ScopeFoundry.base_app</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on Jul 23, 2014</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">ScopeFoundry.helper_funcs</span> <span class="k">import</span> <span class="n">get_logger_from_class</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">configparser</span>
+<span class="k">except</span><span class="p">:</span> <span class="c1"># python 2</span>
+    <span class="kn">import</span> <span class="nn">ConfigParser</span> <span class="k">as</span> <span class="nn">configparser</span>
+
+
+<span class="kn">from</span> <span class="nn">qtpy</span> <span class="k">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
+<span class="kn">import</span> <span class="nn">pyqtgraph</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="c1">#import pyqtgraph.console</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">IPython</span>
+    <span class="k">if</span> <span class="n">IPython</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span> <span class="c1">#compatibility for IPython &lt; 4.0 (pre Jupyter split)</span>
+        <span class="kn">from</span> <span class="nn">IPython.qt.console.rich_ipython_widget</span> <span class="k">import</span> <span class="n">RichIPythonWidget</span> <span class="k">as</span> <span class="n">RichJupyterWidget</span>
+        <span class="kn">from</span> <span class="nn">IPython.qt.inprocess</span> <span class="k">import</span> <span class="n">QtInProcessKernelManager</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">qtconsole.rich_jupyter_widget</span> <span class="k">import</span> <span class="n">RichJupyterWidget</span>
+        <span class="kn">from</span> <span class="nn">qtconsole.inprocess</span> <span class="k">import</span> <span class="n">QtInProcessKernelManager</span>
+    <span class="n">CONSOLE_TYPE</span> <span class="o">=</span> <span class="s1">&#39;qtconsole&#39;</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;unable to import ipython console, using pyqtgraph.console </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">err</span><span class="p">))</span>
+    <span class="kn">import</span> <span class="nn">pyqtgraph.console</span>
+    <span class="n">CONSOLE_TYPE</span> <span class="o">=</span> <span class="s1">&#39;pyqtgraph.console&#39;</span>
+    
+<span class="c1">#import matplotlib</span>
+<span class="c1">#matplotlib.rcParams[&#39;backend.qt4&#39;] = &#39;PySide&#39;</span>
+<span class="c1">#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas</span>
+<span class="c1">#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar2</span>
+
+<span class="c1">#from matplotlib.figure import Figure</span>
+
+<span class="kn">from</span> <span class="nn">.logged_quantity</span> <span class="k">import</span> <span class="n">LoggedQuantity</span><span class="p">,</span> <span class="n">LQCollection</span>
+
+<span class="kn">from</span> <span class="nn">.helper_funcs</span> <span class="k">import</span> <span class="n">confirm_on_close</span><span class="p">,</span> <span class="n">load_qt_ui_file</span><span class="p">,</span> <span class="n">OrderedAttrDict</span><span class="p">,</span> <span class="n">sibling_path</span>
+
+<span class="c1">#from equipment.image_display import ImageDisplay</span>
+
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="c1"># See https://riverbankcomputing.com/pipermail/pyqt/2016-March/037136.html</span>
+<span class="c1"># makes sure that unhandled exceptions in slots don&#39;t crash the whole app with PyQt 5.5 and higher</span>
+<span class="c1"># old version:</span>
+<span class="c1">## sys.excepthook = traceback.print_exception</span>
+<span class="c1"># new version to send to logger</span>
+<div class="viewcode-block" id="log_unhandled_exception"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.log_unhandled_exception">[docs]</a><span class="k">def</span> <span class="nf">log_unhandled_exception</span><span class="p">(</span><span class="o">*</span><span class="n">exc_info</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="o">*</span><span class="n">exc_info</span><span class="p">))</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Unhandled exception:&quot;</span> <span class="o">+</span> <span class="n">text</span><span class="p">)</span></div>
+<span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">log_unhandled_exception</span>
+
+<div class="viewcode-block" id="BaseApp"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseApp">[docs]</a><span class="k">class</span> <span class="nc">BaseApp</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">get_logger_from_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">this_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">qtapp</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtapp</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qtapp</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">LQCollection</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_console_widget</span><span class="p">()</span>
+        <span class="c1"># FIXME Breaks things for microscopes, but necessary for stand alone apps!</span>
+        <span class="c1">#if hasattr(self, &quot;setup&quot;):</span>
+        <span class="c1">#    self.setup() </span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ScopeFoundry&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qtapp</span><span class="o">.</span><span class="n">setApplicationName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        
+<div class="viewcode-block" id="BaseApp.exec_"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseApp.exec_">[docs]</a>    <span class="k">def</span> <span class="nf">exec_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtapp</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="BaseApp.setup_console_widget"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseApp.setup_console_widget">[docs]</a>    <span class="k">def</span> <span class="nf">setup_console_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Console</span>
+        <span class="k">if</span> <span class="n">CONSOLE_TYPE</span> <span class="o">==</span> <span class="s1">&#39;pyqtgraph.console&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console_widget</span> <span class="o">=</span> <span class="n">pyqtgraph</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">ConsoleWidget</span><span class="p">(</span><span class="n">namespace</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;app&#39;</span><span class="p">:</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;pg&#39;</span><span class="p">:</span><span class="n">pg</span><span class="p">,</span> <span class="s1">&#39;np&#39;</span><span class="p">:</span><span class="n">np</span><span class="p">},</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;ScopeFoundry Console&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">CONSOLE_TYPE</span> <span class="o">==</span> <span class="s1">&#39;qtconsole&#39;</span><span class="p">:</span>
+            <span class="c1"># https://github.com/ipython/ipython-in-depth/blob/master/examples/Embedding/inprocess_qtconsole.py</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_manager</span> <span class="o">=</span> <span class="n">QtInProcessKernelManager</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_manager</span><span class="o">.</span><span class="n">start_kernel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_manager</span><span class="o">.</span><span class="n">kernel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="s1">&#39;qt4&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">push</span><span class="p">({</span><span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;app&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_manager</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_client</span><span class="o">.</span><span class="n">start_channels</span><span class="p">()</span>
+    
+            <span class="c1">#self.console_widget = RichIPythonWidget()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console_widget</span> <span class="o">=</span> <span class="n">RichJupyterWidget</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console_widget</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;ScopeFoundry IPython Console&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console_widget</span><span class="o">.</span><span class="n">kernel_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_manager</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console_widget</span><span class="o">.</span><span class="n">kernel_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_client</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;CONSOLE_TYPE undefined&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">console_widget</span>         </div>
+
+<div class="viewcode-block" id="BaseApp.setup"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseApp.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="BaseApp.settings_save_ini"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseApp.settings_save_ini">[docs]</a>    <span class="k">def</span> <span class="nf">settings_save_ini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">save_ro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">optionxform</span> <span class="o">=</span> <span class="nb">str</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">lq</span><span class="o">.</span><span class="n">ro</span> <span class="ow">or</span> <span class="n">save_ro</span><span class="p">:</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span><span class="o">.</span><span class="n">ini_string_value</span><span class="p">())</span>
+                
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">configfile</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ini settings saved to </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">fname</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">optionxform</span><span class="p">))</span>    </div>
+
+<div class="viewcode-block" id="BaseApp.settings_load_ini"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseApp.settings_load_ini">[docs]</a>    <span class="k">def</span> <span class="nf">settings_load_ini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ini settings loading from &quot;</span> <span class="o">+</span> <span class="n">fname</span><span class="p">)</span>
+        
+        <span class="k">def</span> <span class="nf">str2bool</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">optionxform</span> <span class="o">=</span> <span class="nb">str</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;app&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">new_val</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">):</span>
+                <span class="c1">#print(lqname)</span>
+                <span class="n">lq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">lqname</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">lq</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+                        <span class="n">new_val</span> <span class="o">=</span> <span class="n">str2bool</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>
+                    <span class="n">lq</span><span class="o">.</span><span class="n">update_value</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseApp.settings_save_ini_ask"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseApp.settings_save_ini_ask">[docs]</a>    <span class="k">def</span> <span class="nf">settings_save_ini_ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_ro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># TODO add default directory, etc</span>
+        <span class="n">fname</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s1">u&#39;Save Settings&#39;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="s2">u&quot;&quot;</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s2">u&quot;Settings (*.ini)&quot;</span><span class="p">)</span>
+        <span class="c1">#print(repr(fname))</span>
+        <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings_save_ini</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">save_ro</span><span class="o">=</span><span class="n">save_ro</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fname</span></div>
+
+<div class="viewcode-block" id="BaseApp.settings_load_ini_ask"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseApp.settings_load_ini_ask">[docs]</a>    <span class="k">def</span> <span class="nf">settings_load_ini_ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># TODO add default directory, etc</span>
+        <span class="n">fname</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Settings (*.ini)&quot;</span><span class="p">)</span>
+        <span class="c1">#print(repr(fname))</span>
+        <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings_load_ini</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fname</span>  </div></div>
+
+<div class="viewcode-block" id="BaseMicroscopeApp"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp">[docs]</a><span class="k">class</span> <span class="nc">BaseMicroscopeApp</span><span class="p">(</span><span class="n">BaseApp</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ScopeFoundry&quot;</span>
+    <span class="n">mdi</span> <span class="o">=</span> <span class="kc">True</span>
+    
+    <span class="k">def</span> <span class="nf">__del__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="BaseMicroscopeApp.show"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="c1">#self.ui.exec_()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="n">BaseApp</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ui_filename&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdi</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui_filename</span> <span class="o">=</span> <span class="n">sibling_path</span><span class="p">(</span><span class="n">__file__</span><span class="p">,</span><span class="s2">&quot;base_microscope_app_mdi.ui&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui_filename</span> <span class="o">=</span> <span class="n">sibling_path</span><span class="p">(</span><span class="n">__file__</span><span class="p">,</span><span class="s2">&quot;base_microscope_app.ui&quot;</span><span class="p">)</span>
+        <span class="c1"># Load Qt UI from .ui file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="n">load_qt_ui_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui_filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdi</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">col_splitter</span><span class="o">.</span><span class="n">setStretchFactor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">col_splitter</span><span class="o">.</span><span class="n">setStretchFactor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span> <span class="o">=</span> <span class="n">OrderedAttrDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span> <span class="o">=</span> <span class="n">OrderedAttrDict</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_default_ui</span><span class="p">()</span>
+
+
+
+
+    
+<div class="viewcode-block" id="BaseMicroscopeApp.setup_default_ui"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.setup_default_ui">[docs]</a>    <span class="k">def</span> <span class="nf">setup_default_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">confirm_on_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Close </span><span class="si">%s</span><span class="s2">?&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Do you wish to shut down </span><span class="si">%s</span><span class="s2">?&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_on_close</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_close</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">hardware_treeWidget</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">175</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">measurements_treeWidget</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">175</span><span class="p">)</span>
+
+        <span class="c1"># Setup the figures         </span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">measure</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;setting up figures for </span><span class="si">{}</span><span class="s2"> measurement </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">measure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">)</span>            
+            <span class="n">measure</span><span class="o">.</span><span class="n">setup_figure</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdi</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">measure</span><span class="p">,</span> <span class="s1">&#39;ui&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">mdiArea</span><span class="o">.</span><span class="n">addSubWindow</span><span class="p">(</span><span class="n">measure</span><span class="o">.</span><span class="n">ui</span><span class="p">)</span>
+                <span class="n">measure</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>            
+        
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span> <span class="s1">&#39;console_pushButton&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">console_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">console_widget</span><span class="o">.</span><span class="n">show</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">console_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">console_widget</span><span class="o">.</span><span class="n">activateWindow</span><span class="p">)</span>
+        
+        <span class="c1">#settings events</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span> <span class="s2">&quot;settings_autosave_pushButton&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings_autosave_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_auto_save</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span> <span class="s2">&quot;settings_load_last_pushButton&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings_load_last_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_load_last</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span> <span class="s2">&quot;settings_save_pushButton&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings_save_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_save_dialog</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span> <span class="s2">&quot;settings_load_pushButton&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">settings_load_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_load_dialog</span><span class="p">)</span></div>
+        
+        
+<div class="viewcode-block" id="BaseMicroscopeApp.add_quickbar"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.add_quickbar">[docs]</a>    <span class="k">def</span> <span class="nf">add_quickbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">scrollAreaWidgetContents</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quickbar</span> <span class="o">=</span> <span class="n">widget</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quickbar</span></div>
+        
+<div class="viewcode-block" id="BaseMicroscopeApp.on_close"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.on_close">[docs]</a>    <span class="k">def</span> <span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;on_close&quot;</span><span class="p">)</span>
+        <span class="c1"># disconnect all hardware objects</span>
+        <span class="k">for</span> <span class="n">hw</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;disconnecting&quot;</span><span class="p">,</span> <span class="n">hw</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">hw</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;connected&#39;</span><span class="p">]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">hw</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;tried to disconnect </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">hw</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseMicroscopeApp.setup"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Override to add Hardware and Measurement Components&quot;&quot;&quot;</span>
+        <span class="c1">#raise NotImplementedError()</span>
+        <span class="k">pass</span></div>
+    
+        
+    <span class="sd">&quot;&quot;&quot;def add_image_display(self,name,widget):</span>
+<span class="sd">        print &quot;---adding figure&quot;, name, widget</span>
+<span class="sd">        if name in self.figs:</span>
+<span class="sd">            return self.figs[name]</span>
+<span class="sd">        else:</span>
+<span class="sd">            disp=ImageDisplay(name,widget)</span>
+<span class="sd">            self.figs[name]=disp</span>
+<span class="sd">            return disp</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+<div class="viewcode-block" id="BaseMicroscopeApp.add_pg_graphics_layout"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.add_pg_graphics_layout">[docs]</a>    <span class="k">def</span> <span class="nf">add_pg_graphics_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;---adding pg GraphicsLayout figure </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">widget</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">figs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">figs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">disp</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">GraphicsLayoutWidget</span><span class="p">(</span><span class="n">border</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">))</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">disp</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">figs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">disp</span>
+            <span class="k">return</span> <span class="n">disp</span></div>
+        
+        <span class="c1"># IDEA: write an abstract function to add pg.imageItem() for maps, </span>
+        <span class="c1"># which haddels, pixelscale, ROI ....</span>
+        <span class="c1"># could also be implemented in the base_2d class? </span>
+            
+            
+    
+<span class="c1">#     def add_figure_mpl(self,name, widget):</span>
+<span class="c1">#         &quot;&quot;&quot;creates a matplotlib figure attaches it to the qwidget specified</span>
+<span class="c1">#         (widget needs to have a layout set (preferably verticalLayout) </span>
+<span class="c1">#         adds a figure to self.figs&quot;&quot;&quot;</span>
+<span class="c1">#         print &quot;---adding figure&quot;, name, widget</span>
+<span class="c1">#         if name in self.figs:</span>
+<span class="c1">#             return self.figs[name]</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             fig = Figure()</span>
+<span class="c1">#             fig.patch.set_facecolor(&#39;w&#39;)</span>
+<span class="c1">#             canvas = FigureCanvas(fig)</span>
+<span class="c1">#             nav    = NavigationToolbar2(canvas, self.ui)</span>
+<span class="c1">#             widget.layout().addWidget(canvas)</span>
+<span class="c1">#             widget.layout().addWidget(nav)</span>
+<span class="c1">#             canvas.setFocusPolicy( QtCore.Qt.ClickFocus )</span>
+<span class="c1">#             canvas.setFocus()</span>
+<span class="c1">#             self.figs[name] = fig</span>
+<span class="c1">#             return fig</span>
+    
+<div class="viewcode-block" id="BaseMicroscopeApp.add_figure"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.add_figure">[docs]</a>    <span class="k">def</span> <span class="nf">add_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">widget</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_figure_mpl</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">widget</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="BaseMicroscopeApp.add_hardware_component"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.add_hardware_component">[docs]</a>    <span class="k">def</span> <span class="nf">add_hardware_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">hc</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hc</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">hc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hc</span></div>
+    
+<div class="viewcode-block" id="BaseMicroscopeApp.add_measurement_component"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.add_measurement_component">[docs]</a>    <span class="k">def</span> <span class="nf">add_measurement_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">measure</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">measure</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">measure</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">measure</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">measure</span></div>
+    
+<div class="viewcode-block" id="BaseMicroscopeApp.settings_save_h5"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.settings_save_h5">[docs]</a>    <span class="k">def</span> <span class="nf">settings_save_h5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">h5_io</span>
+        <span class="k">with</span> <span class="n">h5_io</span><span class="o">.</span><span class="n">h5_base_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5_file</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">h5_io</span><span class="o">.</span><span class="n">h5_create_measurement_group</span><span class="p">(</span><span class="n">measurement</span><span class="p">,</span> <span class="n">h5_file</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;settings saved to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h5_file</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span></div>
+            
+<div class="viewcode-block" id="BaseMicroscopeApp.settings_save_ini"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.settings_save_ini">[docs]</a>    <span class="k">def</span> <span class="nf">settings_save_ini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">save_ro</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_gui</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_hardware</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_measurements</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">optionxform</span> <span class="o">=</span> <span class="nb">str</span>
+        <span class="k">if</span> <span class="n">save_gui</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save_hardware</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">hc_name</span><span class="p">,</span> <span class="n">hc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">section_name</span> <span class="o">=</span> <span class="s1">&#39;hardware/&#39;</span><span class="o">+</span><span class="n">hc_name</span>            
+                <span class="n">config</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">section_name</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span> <span class="ow">in</span> <span class="n">hc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">lq</span><span class="o">.</span><span class="n">ro</span> <span class="ow">or</span> <span class="n">save_ro</span><span class="p">:</span>
+                        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save_measurements</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">meas_name</span><span class="p">,</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">section_name</span> <span class="o">=</span> <span class="s1">&#39;measurement/&#39;</span><span class="o">+</span><span class="n">meas_name</span>            
+                <span class="n">config</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">section_name</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span> <span class="ow">in</span> <span class="n">measurement</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">lq</span><span class="o">.</span><span class="n">ro</span> <span class="ow">or</span> <span class="n">save_ro</span><span class="p">:</span>
+                        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">configfile</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ini settings saved to </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">fname</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">optionxform</span><span class="p">))</span></div>
+
+
+        
+<div class="viewcode-block" id="BaseMicroscopeApp.settings_load_ini"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.settings_load_ini">[docs]</a>    <span class="k">def</span> <span class="nf">settings_load_ini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ini settings loading from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span>
+        
+        <span class="k">def</span> <span class="nf">str2bool</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">optionxform</span> <span class="o">=</span> <span class="nb">str</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;app&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">new_val</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">):</span>
+                <span class="n">lq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="n">lqname</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+                    <span class="n">new_val</span> <span class="o">=</span> <span class="n">str2bool</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>
+                <span class="n">lq</span><span class="o">.</span><span class="n">update_value</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">hc_name</span><span class="p">,</span> <span class="n">hc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">section_name</span> <span class="o">=</span> <span class="s1">&#39;hardware/&#39;</span><span class="o">+</span><span class="n">hc_name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">section_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">section_name</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">new_val</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">section_name</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">lq</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get_lq</span><span class="p">(</span><span class="n">lqname</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+                            <span class="n">new_val</span> <span class="o">=</span> <span class="n">str2bool</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">lq</span><span class="o">.</span><span class="n">ro</span><span class="p">:</span>
+                            <span class="n">lq</span><span class="o">.</span><span class="n">update_value</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;--&gt;Failed to load config for </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">, new val </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">new_val</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">err</span><span class="p">)))</span>
+                        
+        <span class="k">for</span> <span class="n">meas_name</span><span class="p">,</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">section_name</span> <span class="o">=</span> <span class="s1">&#39;measurement/&#39;</span><span class="o">+</span><span class="n">meas_name</span>            
+            <span class="k">if</span> <span class="n">section_name</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">new_val</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">section_name</span><span class="p">):</span>
+                    <span class="n">lq</span> <span class="o">=</span> <span class="n">measurement</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get_lq</span><span class="p">(</span><span class="n">lqname</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+                        <span class="n">new_val</span> <span class="o">=</span> <span class="n">str2bool</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>                    
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">lq</span><span class="o">.</span><span class="n">ro</span><span class="p">:</span>
+                        <span class="n">lq</span><span class="o">.</span><span class="n">update_value</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ini settings loaded from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">+</span> <span class="n">fname</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="BaseMicroscopeApp.settings_load_h5"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.settings_load_h5">[docs]</a>    <span class="k">def</span> <span class="nf">settings_load_h5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">h5py</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5_file</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+    
+<div class="viewcode-block" id="BaseMicroscopeApp.settings_auto_save"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.settings_auto_save">[docs]</a>    <span class="k">def</span> <span class="nf">settings_auto_save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#fname = &quot;%i_settings.h5&quot; % time.time()</span>
+        <span class="c1">#self.settings_save_h5(fname)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings_save_ini</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2">_settings.ini&quot;</span> <span class="o">%</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="BaseMicroscopeApp.settings_load_last"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.settings_load_last">[docs]</a>    <span class="k">def</span> <span class="nf">settings_load_last</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">glob</span>
+        <span class="c1">#fname = sorted(glob.glob(&quot;*_settings.h5&quot;))[-1]</span>
+        <span class="c1">#self.settings_load_h5(fname)</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*_settings.ini&quot;</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings_load_ini</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
+    
+    
+<div class="viewcode-block" id="BaseMicroscopeApp.settings_save_dialog"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.settings_save_dialog">[docs]</a>    <span class="k">def</span> <span class="nf">settings_save_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fname</span><span class="p">,</span> <span class="n">selectedFilter</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span> <span class="s2">&quot;Save Settings file&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Settings File (*.ini)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fname</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings_save_ini</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="BaseMicroscopeApp.settings_load_dialog"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.base_app.BaseMicroscopeApp.settings_load_dialog">[docs]</a>    <span class="k">def</span> <span class="nf">settings_load_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fname</span><span class="p">,</span> <span class="n">selectedFilter</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="p">,</span><span class="s2">&quot;Open Settings file&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Settings File (*.ini *.h5)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings_load_ini</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hardware_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;App.hardware_components deprecated, used App.hardware&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">measurement_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;App.measurement_components deprecated, used App.measurements&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">logged_quantities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;app.logged_quantities deprecated use app.settings&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span></div>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    
+    <span class="n">app</span> <span class="o">=</span> <span class="n">BaseMicroscopeApp</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ScopeFoundry 0.0.1dev1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, ScopeFoundry Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

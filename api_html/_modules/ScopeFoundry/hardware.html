@@ -1,0 +1,312 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ScopeFoundry.hardware &#8212; ScopeFoundry 0.0.1dev1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1dev1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ScopeFoundry 0.0.1dev1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ScopeFoundry.hardware</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">qtpy</span> <span class="k">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtGui</span>
+<span class="kn">from</span> <span class="nn">.logged_quantity</span> <span class="k">import</span> <span class="n">LQCollection</span><span class="c1">#, LoggedQuantity</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">pyqtgraph</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">ScopeFoundry.helper_funcs</span> <span class="k">import</span> <span class="n">get_logger_from_class</span>
+
+<div class="viewcode-block" id="HardwareComponent"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.hardware.HardwareComponent">[docs]</a><span class="k">class</span> <span class="nc">HardwareComponent</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    HardwareComponent</span>
+<span class="sd">    </span>
+<span class="sd">    Base class for ScopeFoundry Hardware objects</span>
+<span class="sd">    </span>
+<span class="sd">    to subclass, implement :meth:`setup`, :meth:`connect` and :meth:`disconnect`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="HardwareComponent.add_logged_quantity"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.hardware.HardwareComponent.add_logged_quantity">[docs]</a>    <span class="k">def</span> <span class="nf">add_logged_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#lq = LoggedQuantity(name=name, **kwargs)</span>
+        <span class="c1">#self.logged_quantities[name] = lq</span>
+        <span class="c1">#return lq</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HardwareComponent.add_operation"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.hardware.HardwareComponent.add_operation">[docs]</a>    <span class="k">def</span> <span class="nf">add_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">op_func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create an operation for the HardwareComponent.</span>
+<span class="sd">        </span>
+<span class="sd">        *op_func* is a function that will be called upon operation activation</span>
+<span class="sd">        </span>
+<span class="sd">        operations are typically exposed in the default ScopeFoundry gui via a pushButton</span>
+<span class="sd">        </span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :type op_func: QtCore.Slot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">op_func</span>   </div>
+            
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        create new HardwareComponent attached to *app*</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">get_logger_from_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+
+        <span class="c1">#self.logged_quantities = OrderedDict()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">LQCollection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_logged_quantity</span><span class="p">(</span><span class="s2">&quot;connected&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span><span class="o">.</span><span class="n">updated_value</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enable_connection</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_logged_quantity</span><span class="p">(</span><span class="s2">&quot;debug_mode&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_control_widgets_to_hardware_tab</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;HardwareComponent: could not add to hardware tab </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>  <span class="n">err</span> <span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_control_widgets_to_hardware_tree</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;HardwareComponent: could not add to hardware tree </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>  <span class="n">err</span> <span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_been_connected_once</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span> <span class="o">=</span> <span class="kc">False</span>
+        
+<div class="viewcode-block" id="HardwareComponent.setup"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.hardware.HardwareComponent.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs during __init__, before the hardware connection is established</span>
+<span class="sd">        Should generate desired LoggedQuantities, operations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_add_control_widgets_to_hardware_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cwidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">hardware_tab_scrollArea_content_widget</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">controls_groupBox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controls_formLayout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QFormLayout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controls_groupBox</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controls_formLayout</span><span class="p">)</span>
+        
+        <span class="n">cwidget</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controls_groupBox</span><span class="p">)</span>
+        
+        <span class="c1">#self.connect_hardware_checkBox = QtWidgets.QCheckBox(&quot;Connect to Hardware&quot;)</span>
+        <span class="c1">#self.controls_formLayout.addRow(&quot;Connect&quot;, self.connect_hardware_checkBox)</span>
+        <span class="c1">#self.connect_hardware_checkBox.stateChanged.connect(self.enable_connection)</span>
+
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">control_widgets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1">#: :type lq: LoggedQuantity</span>
+            <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">choices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QComboBox</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">si</span><span class="p">:</span>
+                    <span class="n">widget</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">SpinBox</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QDoubleSpinBox</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+                <span class="n">widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">()</span>  
+            <span class="k">elif</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+                <span class="n">widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">()</span>
+            <span class="n">lq</span><span class="o">.</span><span class="n">connect_bidir_to_widget</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+
+            <span class="c1"># Add to formlayout</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controls_formLayout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="n">lqname</span><span class="p">,</span> <span class="n">widget</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">control_widgets</span><span class="p">[</span><span class="n">lqname</span><span class="p">]</span> <span class="o">=</span> <span class="n">widget</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">op_buttons</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">op_name</span><span class="p">,</span> <span class="n">op_func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span> 
+            <span class="n">op_button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="n">op_name</span><span class="p">)</span>
+            <span class="n">op_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">op_func</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controls_formLayout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">op_button</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_from_hardware_button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Read From Hardware&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_from_hardware_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_from_hardware</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controls_formLayout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="s2">&quot;Logged Quantities:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_from_hardware_button</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_add_control_widgets_to_hardware_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">hardware_treeWidget</span>
+        <span class="c1">#tree = QTreeWidget()</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">setHeaderLabels</span><span class="p">([</span><span class="s2">&quot;Hardware&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">])</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">insertTopLevelItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="o">.</span><span class="n">setFirstColumnSpanned</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="o">.</span><span class="n">setForeground</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QColor</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
+        
+        <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1">#: :type lq: LoggedQuantity</span>
+            <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">choices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QComboBox</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">si</span><span class="p">:</span>
+                    <span class="n">widget</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">SpinBox</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QDoubleSpinBox</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+                <span class="n">widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">()</span>  
+            <span class="k">elif</span> <span class="n">lq</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+                <span class="n">widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">()</span>
+            <span class="n">lq</span><span class="o">.</span><span class="n">connect_bidir_to_widget</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+
+            <span class="c1"># Add to formlayout</span>
+            <span class="c1">#self.controls_formLayout.addRow(lqname, widget)</span>
+            <span class="n">lq_tree_item</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="p">,</span> <span class="p">[</span><span class="n">lqname</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="o">.</span><span class="n">addChild</span><span class="p">(</span><span class="n">lq_tree_item</span><span class="p">)</span>
+            <span class="n">lq</span><span class="o">.</span><span class="n">hardware_tree_widget</span> <span class="o">=</span> <span class="n">widget</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">setItemWidget</span><span class="p">(</span><span class="n">lq_tree_item</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lq</span><span class="o">.</span><span class="n">hardware_tree_widget</span><span class="p">)</span>
+            <span class="c1">#self.control_widgets[lqname] = widget</span>
+                
+        <span class="bp">self</span><span class="o">.</span><span class="n">op_buttons</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">op_name</span><span class="p">,</span> <span class="n">op_func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span> 
+            <span class="n">op_button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="n">op_name</span><span class="p">)</span>
+            <span class="n">op_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">op_func</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">op_buttons</span><span class="p">[</span><span class="n">op_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">op_button</span>
+            <span class="c1">#self.controls_formLayout.addRow(op_name, op_button)</span>
+            <span class="n">op_tree_item</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="p">,</span> <span class="p">[</span><span class="n">op_name</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">])</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">setItemWidget</span><span class="p">(</span><span class="n">op_tree_item</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">op_button</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_read_from_hardware_button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Read From</span><span class="se">\n</span><span class="s2">Hardware&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_read_from_hardware_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_from_hardware</span><span class="p">)</span>
+        <span class="c1">#self.controls_formLayout.addRow(&quot;Logged Quantities:&quot;, self.read_from_hardware_button)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_from_hardware_button_tree_item</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Logged Quantities:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="o">.</span><span class="n">addChild</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_from_hardware_button_tree_item</span><span class="p">)</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">setItemWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_from_hardware_button_tree_item</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_read_from_hardware_button</span><span class="p">)</span>
+
+    <span class="nd">@QtCore</span><span class="o">.</span><span class="n">Slot</span><span class="p">()</span>    
+<div class="viewcode-block" id="HardwareComponent.read_from_hardware"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.hardware.HardwareComponent.read_from_hardware">[docs]</a>    <span class="k">def</span> <span class="nf">read_from_hardware</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read all settings (:class:`LoggedQuantity`) connected to hardware states</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">lq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug_mode</span><span class="o">.</span><span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;read_from_hardware&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">lq</span><span class="o">.</span><span class="n">read_from_hardware</span><span class="p">()</span></div>
+        
+    
+<div class="viewcode-block" id="HardwareComponent.connect"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.hardware.HardwareComponent.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens a connection to hardware</span>
+<span class="sd">        and connects :class:`LoggedQuantity` settings to related hardware </span>
+<span class="sd">        functions and parameters </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+        
+        
+<div class="viewcode-block" id="HardwareComponent.disconnect"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.hardware.HardwareComponent.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disconnects the hardware and severs hardware--:class:`LoggedQuantity` links</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+    
+    <span class="nd">@QtCore</span><span class="o">.</span><span class="n">Slot</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+<div class="viewcode-block" id="HardwareComponent.enable_connection"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.hardware.HardwareComponent.enable_connection">[docs]</a>    <span class="k">def</span> <span class="nf">enable_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">enable</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="o">.</span><span class="n">setForeground</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QColor</span><span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree_item</span><span class="o">.</span><span class="n">setForeground</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QColor</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span></div>
+            
+            
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">gui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Hardware.gui is deprecated, use Hardware.app&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ScopeFoundry 0.0.1dev1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, ScopeFoundry Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

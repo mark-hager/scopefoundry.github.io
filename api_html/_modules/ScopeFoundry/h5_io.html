@@ -1,0 +1,313 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ScopeFoundry.h5_io &#8212; ScopeFoundry 0.0.1dev1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1dev1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ScopeFoundry 0.0.1dev1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ScopeFoundry.h5_io</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">recommended HDF5 file format for ScopeFoundry</span>
+<span class="sd">* = group</span>
+<span class="sd">- = attr</span>
+<span class="sd">D = data_set</span>
+
+<span class="sd">* /</span>
+<span class="sd">    - scope_foundry_version = 100</span>
+<span class="sd">    - emd_version = 102</span>
+<span class="sd">    * gui</span>
+<span class="sd">        - log_quant_1</span>
+<span class="sd">        - log_quant_1_unit</span>
+<span class="sd">        - ...</span>
+<span class="sd">    * hardware</span>
+<span class="sd">        * hardware_component_1</span>
+<span class="sd">            - ScopeFoundry_Type = Hardware</span>
+<span class="sd">            - name = hardware_component_1</span>
+<span class="sd">            - log_quant_1</span>
+<span class="sd">            - log_quant_1_unit</span>
+<span class="sd">            - ...</span>
+<span class="sd">            * units</span>
+<span class="sd">                - log_quant_1 = &#39;[n_m]&#39;</span>
+<span class="sd">        * ...</span>
+<span class="sd">    * measurement_1</span>
+<span class="sd">        - ScopeFoundry_Type = Measurement</span>
+<span class="sd">        - name = measurement_1</span>
+<span class="sd">        - log_quant_1</span>
+<span class="sd">        - ...</span>
+<span class="sd">        * units</span>
+<span class="sd">            - log_quant_1 = &#39;[n_m]&#39;</span>
+<span class="sd">        * image_like_data_set_1</span>
+<span class="sd">            - emd_group_type = 1</span>
+<span class="sd">            D data</span>
+<span class="sd">            D dim0</span>
+<span class="sd">                - name = &#39;x&#39;</span>
+<span class="sd">                - unit = &#39;[n_m]&#39;</span>
+<span class="sd">            D ...</span>
+<span class="sd">            D dimN</span>
+<span class="sd">        D simple_data_set_2</span>
+<span class="sd">        D ...</span>
+
+<span class="sd">other thoughts:</span>
+<span class="sd">    store git revision of code</span>
+<span class="sd">    store git revision of ScopeFoundry</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="h5_base_file"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.h5_io.h5_base_file">[docs]</a><span class="k">def</span> <span class="nf">h5_base_file</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">measurement</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">fname</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">measurement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">_</span><span class="si">%s</span><span class="s2">.h5&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">measurement</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">h5_file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">h5_file</span><span class="p">[</span><span class="s1">&#39;/&#39;</span><span class="p">]</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;ScopeFoundry_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;time_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">t0</span>
+
+    <span class="n">h5_save_app_lq</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+    <span class="n">h5_save_hardware_lq</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h5_file</span></div>
+
+<div class="viewcode-block" id="h5_save_app_lq"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.h5_io.h5_save_app_lq">[docs]</a><span class="k">def</span> <span class="nf">h5_save_app_lq</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+    <span class="n">h5_app_group</span> <span class="o">=</span> <span class="n">h5group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;app/&#39;</span><span class="p">)</span>
+    <span class="n">h5_app_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">h5_app_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ScopeFoundry_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;App&quot;</span>
+    <span class="n">settings_group</span> <span class="o">=</span> <span class="n">h5_app_group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;settings&#39;</span><span class="p">)</span>
+    <span class="n">h5_save_lqcoll_to_attrs</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">settings_group</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="h5_save_hardware_lq"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.h5_io.h5_save_hardware_lq">[docs]</a><span class="k">def</span> <span class="nf">h5_save_hardware_lq</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+    <span class="n">h5_hardware_group</span> <span class="o">=</span> <span class="n">h5group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;hardware/&#39;</span><span class="p">)</span>
+    <span class="n">h5_hardware_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ScopeFoundry_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;HardwareList&quot;</span>
+    <span class="k">for</span> <span class="n">hc_name</span><span class="p">,</span> <span class="n">hc</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">h5_hc_group</span> <span class="o">=</span> <span class="n">h5_hardware_group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">hc_name</span><span class="p">)</span>
+        <span class="n">h5_hc_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">h5_hc_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ScopeFoundry_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Hardware&quot;</span>
+        <span class="n">h5_hc_settings_group</span> <span class="o">=</span> <span class="n">h5_hc_group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">)</span>
+        <span class="n">h5_save_lqcoll_to_attrs</span><span class="p">(</span><span class="n">hc</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">h5_hc_settings_group</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h5_hardware_group</span></div>
+
+<div class="viewcode-block" id="h5_save_lqcoll_to_attrs"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.h5_io.h5_save_lqcoll_to_attrs">[docs]</a><span class="k">def</span> <span class="nf">h5_save_lqcoll_to_attrs</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    take a LQCollection</span>
+<span class="sd">    and create attributes inside h5group</span>
+
+<span class="sd">    :param logged_quantities:</span>
+<span class="sd">    :param h5group:</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unit_group</span> <span class="o">=</span> <span class="n">h5group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;units&#39;</span><span class="p">)</span>
+    <span class="c1"># TODO decide if we should specify h5 attr data type based on LQ dtype</span>
+    <span class="k">for</span> <span class="n">lqname</span><span class="p">,</span> <span class="n">lq</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">h5group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">lqname</span><span class="p">]</span> <span class="o">=</span> <span class="n">lq</span><span class="o">.</span><span class="n">val</span>
+        <span class="k">if</span> <span class="n">lq</span><span class="o">.</span><span class="n">unit</span><span class="p">:</span>
+            <span class="n">unit_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">lqname</span><span class="p">]</span> <span class="o">=</span> <span class="n">lq</span><span class="o">.</span><span class="n">unit</span></div>
+
+
+<div class="viewcode-block" id="h5_create_measurement_group"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.h5_io.h5_create_measurement_group">[docs]</a><span class="k">def</span> <span class="nf">h5_create_measurement_group</span><span class="p">(</span><span class="n">measurement</span><span class="p">,</span> <span class="n">h5group</span><span class="p">,</span> <span class="n">group_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">group_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">group_name</span> <span class="o">=</span> <span class="s1">&#39;measurement/&#39;</span> <span class="o">+</span> <span class="n">measurement</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">h5_meas_group</span> <span class="o">=</span> <span class="n">h5group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">group_name</span><span class="p">)</span>
+    <span class="n">h5_save_measurement_settings</span><span class="p">(</span><span class="n">measurement</span><span class="p">,</span> <span class="n">h5_meas_group</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">h5_meas_group</span></div>
+
+<div class="viewcode-block" id="h5_save_measurement_settings"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.h5_io.h5_save_measurement_settings">[docs]</a><span class="k">def</span> <span class="nf">h5_save_measurement_settings</span><span class="p">(</span><span class="n">measurement</span><span class="p">,</span> <span class="n">h5_meas_group</span><span class="p">):</span>
+    <span class="n">h5_meas_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">measurement</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">h5_meas_group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ScopeFoundry_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Measurement&quot;</span>
+    <span class="n">settings_group</span> <span class="o">=</span> <span class="n">h5_meas_group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">)</span>
+    <span class="n">h5_save_lqcoll_to_attrs</span><span class="p">(</span><span class="n">measurement</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="n">settings_group</span><span class="p">)</span></div>
+    
+    
+<div class="viewcode-block" id="h5_create_emd_dataset"><a class="viewcode-back" href="../../ScopeFoundry.html#ScopeFoundry.h5_io.h5_create_emd_dataset">[docs]</a><span class="k">def</span> <span class="nf">h5_create_emd_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">h5parent</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maxshape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">dim_arrays</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dim_names</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dim_units</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create an EMD dataset v0.2 inside h5parent</span>
+<span class="sd">    returns an h5 group emd_grp</span>
+<span class="sd">    </span>
+<span class="sd">    to access N-dim dataset:    emd_grp[&#39;data&#39;]</span>
+<span class="sd">    to access a specific dimension array: emd_grp[&#39;dim1&#39;]</span>
+
+<span class="sd">    HDF5 Hierarchy:</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    * h5parent</span>
+<span class="sd">        * name [emd_grp] (&lt;--returned)</span>
+<span class="sd">            - emd_group_type = 1</span>
+<span class="sd">            D data [shape = shape] </span>
+<span class="sd">            D dim1 [shape = shape[0]]</span>
+<span class="sd">                - name</span>
+<span class="sd">                - units</span>
+<span class="sd">            ...</span>
+<span class="sd">            D dimN [shape = shape[-1]]      </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    h5parent : parent HDF5 group </span>
+<span class="sd">    </span>
+<span class="sd">    shape : Dataset shape of N dimensions.  Required if &quot;data&quot; isn&#39;t provided.</span>
+
+<span class="sd">    data : Provide data to initialize the dataset.  If used, you can omit</span>
+<span class="sd">            shape and dtype arguments.</span>
+<span class="sd">    </span>
+<span class="sd">    Keyword Args:</span>
+<span class="sd">    </span>
+<span class="sd">    dtype : Numpy dtype or string.  If omitted, dtype(&#39;f&#39;) will be used.</span>
+<span class="sd">            Required if &quot;data&quot; isn&#39;t provided; otherwise, overrides data</span>
+<span class="sd">            array&#39;s dtype.</span>
+<span class="sd">            </span>
+<span class="sd">    dim_arrays : optional, a list of N dimension arrays</span>
+<span class="sd">    </span>
+<span class="sd">    dim_names : optional, a list of N strings naming the dataset dimensions </span>
+<span class="sd">    </span>
+<span class="sd">    dim_units : optional, a list of N strings specifying units of dataset dimensions</span>
+<span class="sd">    </span>
+<span class="sd">    Other keyword arguments follow from h5py.File.create_dataset</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    emd_grp : h5 group containing dataset and dimension arrays, see hierarchy below</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#set the emd version tag at root of h5 file</span>
+    <span class="n">h5parent</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;/&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;version_major&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">h5parent</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;/&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;version_minor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+    
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span>
+    <span class="n">pyplot</span><span class="o">.</span><span class="n">acorr</span>
+    
+    <span class="c1"># create the EMD data group</span>
+    <span class="n">emd_grp</span> <span class="o">=</span> <span class="n">h5parent</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">emd_grp</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;emd_group_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    
+    <span class="c1"># data set where the N-dim data is stored</span>
+    <span class="n">data_dset</span> <span class="o">=</span> <span class="n">emd_grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">maxshape</span><span class="o">=</span><span class="n">maxshape</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">dim_arrays</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dim_arrays</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dim_names</span>  <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dim_names</span><span class="p">)</span>  <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dim_units</span>  <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dim_units</span><span class="p">)</span>  <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">maxshape</span>   <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">maxshape</span><span class="p">)</span>   <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    
+    <span class="c1"># Create the dimension array datasets</span>
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">dim_arrays</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dim_array</span> <span class="o">=</span> <span class="n">dim_arrays</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+            <span class="n">dim_dtype</span> <span class="o">=</span>  <span class="n">dim_array</span><span class="o">.</span><span class="n">dtype</span>            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dim_array</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">dim_dtype</span> <span class="o">=</span> <span class="nb">float</span>
+        <span class="k">if</span> <span class="n">dim_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dim_name</span> <span class="o">=</span> <span class="n">dim_names</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dim_name</span> <span class="o">=</span> <span class="s2">&quot;dim&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dim_units</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dim_unit</span> <span class="o">=</span> <span class="n">dim_units</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dim_unit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">maxshape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dim_maxshape</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxshape</span><span class="p">[</span><span class="n">ii</span><span class="p">],)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dim_maxshape</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1"># create dimension array dataset</span>
+        <span class="n">dim_dset</span> <span class="o">=</span> <span class="n">emd_grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;dim&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">ii</span><span class="p">],),</span> 
+                                           <span class="n">dtype</span><span class="o">=</span><span class="n">dim_dtype</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dim_array</span><span class="p">,</span> 
+                                           <span class="n">maxshape</span><span class="o">=</span><span class="n">dim_maxshape</span><span class="p">)</span>
+        <span class="n">dim_dset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dim_name</span>
+        <span class="k">if</span> <span class="n">dim_unit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dim_dset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dim_unit</span>
+            
+    <span class="k">return</span> <span class="n">emd_grp</span></div>
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ScopeFoundry 0.0.1dev1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, ScopeFoundry Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>
