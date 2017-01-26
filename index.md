@@ -47,4 +47,8 @@ Uses:
 [![hw_diagram](./hw_plugin_diagram.png)][hw_tut]
 [![data_browse_img](databrowse_1_400.png)][databrowser_tut]
 
+## Where to Find More
 
+For questions about using ScopeFoundry, please visit and post on the ScopeFoundry [project mailing list / forum](https://groups.google.com/forum/#!forum/scopefoundry)
+
+For Source Code of ScopeFoundry visit our [GitHub page](https://github.com/scopefoundry/)
