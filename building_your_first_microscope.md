@@ -1,9 +1,8 @@
-Building Your First Microscope
-==============================
+# Building Your First Microscope
 
 
-Step 1: Installing Python and ScopeFoundry
-------------------------------------------
+## Step 1: Installing Python and ScopeFoundry
+
 
 [anaconda_dl]: https://www.continuum.io/downloads
 
@@ -13,37 +12,36 @@ Note: We recommend the [Anaconda][anaconda_dl] Python distribution, which contai
 
 * Anaconda provides a way to make a clean set of packages in an "environment". Follow these steps to create an [conda environment](http://conda.pydata.org/docs/using/envs.html). This environment includes ScopeFoundry and all of the packages ScopeFoundry needs to run. 
 
-    #### Windows
+__Windows__
     
-    Open an Anaconda prompt and run the following commands:
+Open an Anaconda prompt and run the following commands:
     
-    ```cmd
-    > conda create -n scopefoundry python=3.5
-    > activate scopefoundry
-    (scopefoundry) > conda install numpy pyqt qtpy h5py
-    (scopefoundry) > pip install pyqtgraph
-    (scopefoundry) > conda install git  
-    (scopefoundry) > pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
-    ```
-    The first two lines create and activate a clean python / conda environment for your ScopeFoundry app to use, the next lines install the required packages and the final line install the ScopeFoundry package itself.    
+```
+> conda create -n scopefoundry python=3.5
+> activate scopefoundry
+(scopefoundry) > conda install numpy pyqt qtpy h5py
+(scopefoundry) > pip install pyqtgraph
+(scopefoundry) > conda install git  
+(scopefoundry) > pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
+```
+The first two lines create and activate a clean python / conda environment for your ScopeFoundry app to use, the next lines install the required packages and the final line install the ScopeFoundry package itself.    
 
-    #### Mac/Linux
+__Mac / Linux__
 
-    Open a terminal and run the following commands:
+Open a terminal and run the following commands:
 
-    ```
-    $ conda create -n scopefoundry python=3.5
-    $ source activate scopefoundry
-    (scopefoundry) $ conda install numpy pyqt qtpy h5py
-    (scopefoundry) $ pip install pyqtgraph
-    (scopefoundry) $ pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
-    ```	
+```
+$ conda create -n scopefoundry python=3.5
+$ source activate scopefoundry
+(scopefoundry) $ conda install numpy pyqt qtpy h5py
+(scopefoundry) $ pip install pyqtgraph
+(scopefoundry) $ pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
+```
 
-    The first two lines create and activate a clean python / conda environment for your ScopeFoundry app to use, the next lines install the required packages and the final line install the ScopeFoundry package itself.   
+The first two lines create and activate a clean python / conda environment for your ScopeFoundry app to use, the next lines install the required packages and the final line install the ScopeFoundry package itself.   
 
 
-Step 2: Create your Microscope App
-----------------------------------
+## Step 2: Create your Microscope App
 
 [fancy_microscope_app.py]: building_your_first_microscope_tutorial/fancy_microscope_app.py
 
