@@ -1,10 +1,4 @@
-# handy python 2/3 compatiblity
-from __future__ import division, print_function, absolute_import
-
-# import the base class from ScopeFoundry that you 
-# will subclass for your for your microscope
 from ScopeFoundry import BaseMicroscopeApp
-
 
 class FancyMicroscopeApp(BaseMicroscopeApp):
 
@@ -13,7 +7,7 @@ class FancyMicroscopeApp(BaseMicroscopeApp):
     name = 'fancy_microscope'
     
     # You must define a setup function that adds all the 
-    #capaiblities of the microscope and sets default settings
+    #capablities of the microscope and sets default settings
     def setup(self):
         
         #Add App wide settings
@@ -31,8 +25,6 @@ class FancyMicroscopeApp(BaseMicroscopeApp):
         # show ui
         self.ui.show()
         self.ui.activateWindow()
-        
-        #self.settings_load_ini("fancy_settings.ini")
 
 
 if __name__ == '__main__':
