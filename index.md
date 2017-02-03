@@ -9,7 +9,6 @@ GitHub page: <https://github.com/ScopeFoundry/>
 
 ## Why ScopeFoundry?
 
-![Microscope](microscope.png)
 
 An open-source alternative to LabView or MATLAB instrument control.
 
@@ -22,6 +21,7 @@ Uses:
 
 * Currently used in multi-modal scanning microscopy measurements with electrons and optics
 * Flexible for many other data acquisition tasks
+
 
 
 ## Documentation
@@ -43,12 +43,16 @@ Uses:
 * [Hardware Plug-in][hw_tut]
 * [Data Browser Viewer][databrowser_tut]
 
+![Microscope](microscope.png)
 
 
+
+<!--
 [![data_browse_img](microscope_400.png)][1st_microscope]
 [![measure_dia](./measure_diagram.png)][measure_tut]
 [![hw_diagram](./hw_plugin_diagram.png)][hw_tut]
 [![data_browse_img](databrowse_1_400.png)][databrowser_tut]
+-->
 
 ## Where to Find More
 
