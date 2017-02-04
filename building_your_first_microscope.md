@@ -253,7 +253,7 @@ Now that you have interacted with ScopeFoundry and built a microscope app with p
 See these tutorials for a more detailed look into how to customize your microscope with ScopeFoundry: 
 
 * ScopeFoundry [Key Concepts](key_concepts.md)
-* Build a custom Measurement
+* Build a custom [Measurement](custom_measurement.md)
 * Build a custom [Hardware Component](building_a_custom_hardware_plugin.md)
 * Build a custom [Data Browser View]((./databrowser_view_tutorial.md)) for your data files
 * Create a custom side bar
