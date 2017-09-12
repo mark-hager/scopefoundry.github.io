@@ -2,9 +2,13 @@
 
 [FoundryDataBrowser]: https://github.com/ScopeFoundry/FoundryDataBrowser
 
+<b>You can download the complete script here: [databrowser_example.py](databrowse_example_py.md)</b>
+
 ScopeFoundry provides a DataBrowserApp that makes it easy for a user to explore a set of experiemental results on their computer. It is a plug-in based application, where data-type plug-ins (a `DataBrowserView`) can show relevant data within the file. The [FoundryDataBrowser] project is an example of the ScopeFoundry DataBrowser with a number of Views used to browse common experiemental data the Molecular Foundry.
 
 ![ Image of the DataBrower ](databrowse_1.png)
+
+
 
 ## Setup
 
@@ -18,11 +22,10 @@ Note: We recommend the [Anaconda][anaconda_dl] python distribution, which contai
 * Create an [conda environment](http://conda.pydata.org/docs/using/envs.html) includes ScopeFoundry and its dependencies. Open an Anaconda prompt and run the following commands:
 
 ```
-$ conda create -n scopefoundry python=3.5
+$ conda create -n scopefoundry python=3.6 anaconda
 $ source activate scopefoundry 
-(scopefoundry) $ conda install numpy pyqt qtpy h5py
 (scopefoundry) $ pip install pyqtgraph
-(scopefoundry) $ pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
+(scopefoundry) $ pip install ScopeFoundry
 ```	
 
 Note: On Windows `source activate scopefoundry` should be replaced by `activate scopefoundry`
@@ -30,9 +33,12 @@ Note: On Windows `source activate scopefoundry` should be replaced by `activate 
 
 ## Defining a DataBrowserView
 
+
+
 Lets define a custom view. We do this by subclassing the DataBrowserView class. Three methods should be defined `setup()`, `is_file_supported()`, and `on_change_data_filename()`.
 
-Here is an example of a simple dataviewer that uses a PyQtGraph ImageView to display an image loaded via scipy (this file is called `views/images.py` in [FoundryDataBrowser][FoundryDataBrowserRepo]):
+Here is an example of a simple dataviewer that uses a PyQtGraph ImageView to display an image loaded via scipy (this file is called `viewers/images.py`
+in [FoundryDataBrowser][FoundryDataBrowser]):
 
 ```python
 from ScopeFoundry.data_browser import DataBrowserView
@@ -81,19 +87,23 @@ To use this view you can create a DataBrowser script like this:
 
 ```python
 from ScopeFoundry.data_browser import DataBrowser
+import sys
 
 app = DataBrowser(sys.argv)
 
 # views are loaded in order of more generic to more specific.
 ## ie the last loaded views are checked first for compatibility
 
-from viewers.images import ScipyImreadView
+
 app.load_view(ScipyImreadView(app))
     
 # More views here
 
 sys.exit(app.exec_())
 ```
+
+You can download the complete script here: [databrowser_example.py](databrowse_example_py.md)
+
 
 Here is a resulting screen shot of running this data browser script and navigating to a folder with TIFF images.
 
