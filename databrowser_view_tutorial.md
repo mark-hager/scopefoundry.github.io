@@ -17,14 +17,14 @@ ScopeFoundry provides a DataBrowserApp that makes it easy for a user to explore 
 Note: We recommend the [Anaconda][anaconda_dl] python distribution, which contains many easy to install scientific python packages.
 
 
-* Download and Install [Anaconda][anaconda_dl]. Recommended python version is 3.5, but 2.7 will also work.
+* Download and Install [Anaconda][anaconda_dl]. Recommended python version is 3.5.
 
 * Create an [conda environment](http://conda.pydata.org/docs/using/envs.html) includes ScopeFoundry and its dependencies. Open an Anaconda prompt and run the following commands:
 
 ```
 $ conda create -n scopefoundry python=3.6 anaconda
 $ source activate scopefoundry 
-(scopefoundry) $ pip install pyqtgraph
+(scopefoundry) $ conda install pyqtgraph
 (scopefoundry) $ pip install ScopeFoundry
 ```	
 

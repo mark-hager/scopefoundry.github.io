@@ -5,7 +5,19 @@ A Python platform for controlling custom laboratory experiments and visualizing 
 ![Logo](logo/scopefoundry_logo2_189.png)
 
 
-GitHub page: <https://github.com/ScopeFoundry/>
+
+
+## Install
+
+Using [Anaconda](https://www.continuum.io/downloads) with Python 3.6:
+
+```
+conda install numpy pyqt qtpy h5py pyqtgraph
+pip install ScopeFoundry
+```
+
+Source Code available on GitHub: <https://github.com/ScopeFoundry/>
+
 
 ## Why ScopeFoundry?
 

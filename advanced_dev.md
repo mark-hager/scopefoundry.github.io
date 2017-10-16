@@ -12,19 +12,37 @@
 
 To have a consistent python environment for using and developing ScopeFoundry, we recommend the [Anaconda][anaconda_dl] python distribution and using [conda environments][conda_env] to manage packages.
 
-* Download and Install [Anaconda][anaconda_dl]. Recommended Python version is 3.5, but 2.7 will also work. If you are developing hardware or measurement plug-ins to be shared, it is a good idea to check to make sure your code works on both Python 2 and 3.
+* Download and Install [Anaconda][anaconda_dl]. Recommended Python version is 3.6, but 2.7 may work, but is not currently tested. If you are developing hardware or measurement plug-ins to be shared, it is a good idea to check to make sure your code works on both Python 2 and 3 by using libraries such as [six](https://pythonhosted.org/six/).
 
 * Create an [conda environment][conda_env] includes ScopeFoundry and its dependencies. Open an Anaconda prompt and run the following commands:
 
 ```
-$ conda create -n scopefoundry python=3.5
+$ conda create -n scopefoundry python=3.6 anaconda
 $ source activate scopefoundry
-(scopefoundry) $ conda install numpy pyqt qtpy h5py
 (scopefoundry) $ pip install pyqtgraph
-(scopefoundry) $ pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
 ```	
 
 **Note:** On Windows `source activate scopefoundry` should be replaced by `activate scopefoundry`
+
+
+If you would like a more minimal environment, without all the default packages from Anaconda:
+
+```
+$ conda create -n scopefoundry python=3.6
+$ source activate scopefoundry
+(scopefoundry) $ conda install numpy pyqt qtpy h5py
+(scopefoundry) $ pip install pyqtgraph
+```	
+
+
+If you are interested in using the latest development version of ScopeFoundry, instead of the most recent release on [PyPI](https://pypi.python.org/pypi/ScopeFoundry), you can install via git.
+To install the latest development version of ScopeFoundry from github:
+
+```
+(scopefoundry) $ pip install git+git://github.com/ScopeFoundry/ScopeFoundry.git
+```
+
+
 
 ### Eclipse + PyDev IDE
 
@@ -92,8 +110,9 @@ You will need commit access to do this, but you can always fork the plug-in repo
 
 ## Where to Find Out More
 
-
 For questions about this documentation or ScopeFoundry in general, please visit and post on the ScopeFoundry [project mailing list and forum](https://groups.google.com/forum/#!forum/scopefoundry).
 
 For source code of all ScopeFoundry projects visit our [GitHub page](https://github.com/scopefoundry/).
+
+ScopeFoundry is available to download from [PyPI](https://pypi.python.org/pypi/ScopeFoundry) or install via `pip install ScopeFoundry`.
 
