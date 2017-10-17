@@ -1,0 +1,64 @@
+---
+---
+
+@import 'jekyll-theme-leap-day';
+
+#banner {
+  background: #a2bde8;
+  border: 1px solid #2a5599;
+
+  .button {
+    background-color: #a2bde8;
+    border: 1px solid #2a5599;
+
+    }
+    
+  .downloads {
+    span {
+      color:#000000;
+    }
+  }
+}
+
+
+header {
+
+    h1 {
+        font: 40px/48px "Futura", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+}
+
+code {
+  font-family: 'Courier', 'Lucida Sans', Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
+  font-size:13px;
+  //background: #AAAAAA;
+  text-shadow: 0px 0px 0px #000;
+  margin: 0 4px;
+  padding: 2px 6px;
+  background: #f8f8f8;
+  border-radius: 2px;
+  color: #000000;
+
+}
+
+
+pre {
+  padding:8px 15px;
+  background: #f8f8f8;
+  border-radius: 3px;
+  border:1px solid #c7c7c7;
+  overflow: auto;
+  overflow-y: hidden;
+  color: #000000;
+
+  code {
+    margin: 0px;
+    padding: 0px;
+  }
+}
+
+.highlight {
+  background-color: #f8f8f8;
+}
+
+@import "rouge-github";

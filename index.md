@@ -1,8 +1,11 @@
 # ScopeFoundry
 
-A Python platform for controlling custom laboratory experiments and visualizing scientific data
-
+<span style="float: right;">
 ![Logo](logo/scopefoundry_logo2_189.png)
+</span>
+
+
+A Python platform for controlling custom laboratory experiments and visualizing scientific data
 
 
 
@@ -33,6 +36,8 @@ Uses:
 
 * Currently used in multi-modal scanning microscopy measurements with electrons and optics
 * Flexible for many other data acquisition tasks
+
+## Demo Videos
 
 <b>[Demo Videos](video_demos.md)</b>
 

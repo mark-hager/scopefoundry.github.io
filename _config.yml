@@ -1,4 +1,6 @@
-theme: jekyll-theme-slate
+theme: jekyll-theme-leap-day
 
 title: ScopeFoundry
 description: A Python platform for controlling custom laboratory experiments and visualizing scientific data
+
+show_downloads: "false"
