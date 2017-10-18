@@ -21,6 +21,11 @@ pip install ScopeFoundry
 
 Source Code available on GitHub: <https://github.com/ScopeFoundry/>
 
+### Data Browser
+
+For a pre-compiled version of FoundryDataBrowser, check the [releases page](https://github.com/ScopeFoundry/FoundryDataBrowser/releases)
+
+
 
 ## Why ScopeFoundry?
 
