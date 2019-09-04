@@ -1,0 +1,60 @@
+# Step-by-Step instructions for ScopeFoundry Development on Windows
+
+* INSTALL ANACONDA 3 (Python latest version), only for your Windows User (who must be an Administrator), not for everyone. Pick a good directory, sometimes it will try to install deep within LocalSettings
+
+* INSTALL Git (for example using `conda install git`, or using the Source Tree software) and configure it.
+For example:
+	`git config --global user.name "Nobody Nobinov"`
+	`git config --global user.email "nnobinov@example.com"`
+
+
+* Create a folder (main folder) where you are going to put the ScopeFoundry code. Open Anaconda Prompt (or Terminal) and go to that folder
+
+	* Set up git repo:
+		* `git init`
+		* `copy nul __init__.py` (this creates an empy file called  `__init__.py` in the main folder)
+		* `git add -A`
+		* `git commit –m "New repository"` (the commit of at least one file is necessary before running the following commands)
+	* Include ScopeFoundry as a subtree
+		* `git subtree add --prefix ScopeFoundry https://github.com/ScopeFoundry/ScopeFoundry.git master`
+		(this will add a copy of ScopeFoundry to the main folder)
+	* Grab Hardware plugins from ScopeFoundry's github page:
+		* ```git subtree add --prefix ScopeFoundryHW/virtual_function_gen/  https://github.com/ScopeFoundry/HW_virtual_function_gen.git master```
+(this will add a particular Harware to the ScopeFoundryHW folder)
+
+
+* To update ScopeFoundry to the latest version:
+	```git subtree pull --prefix ScopeFoundry https://github.com/ScopeFoundry/ScopeFoundry.git master```
+
+
+* INSTALL ECLIPSE. It will require Java Development Kit JDK, to be installed or upgraded. During installation select Eclipse for Java Developers. 
+	* A useful way to do this step is to use [https://ninite.com/](). Select "Eclipse" and "JDK (AdoptOpenJDK) x64 11"
+
+*  INSTALL PyDev in Eclipse. 
+	*  Use Help->Marketplace to install PyDev.
+
+* SET THE PYTHON INTERPRETER IN ECLIPSE:
+	* Open Eclipse, close Welcome page 
+	* 
+	* (Windows->Preference->PyDev->Interpreters->Phyton Interpreters ->New... ->Browse->Select python.exe in Anaconda 3 folder) 
+
+	* Under “Package” tab, select "Load conda var before run?"
+
+	* Underv “Environment package” add variable `CONDA_DLL_SEARCH_MODIFICATION__ENABLE`, setting value = 1
+
+
+*  SETUP THE PYTHON PROJECT in one of the two following ways:
+		* Create A New Project
+		* Create a python project in Eclipse (New->Other->PyDev->PyDevProject) and add a new .py file to the project. 
+		* Make sure to select “Add project directory to the PYTHONPATH”
+
+	* Use An Existing Code
+		* File -> Open Project From Filesystem
+		* Select the directory where your phyton code is.
+		* Right click on the newly created folder in Eclipse, select PyDev-> Set As PyDev Project
+		* Right click on the newly created folder in Eclipse, select PyDev-> Set as folder in PYTHONPATH
+
+* INSTALL QT Creator (use default options). This for interactive creation of QT user interface files (.ui)
+
+
+* Other ScopeFoundry resources are available on: [https://bitbucket.org/berkeleylab/foundry_scope/src/master/]() 
