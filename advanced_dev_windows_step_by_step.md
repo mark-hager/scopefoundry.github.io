@@ -1,11 +1,41 @@
-# Step-by-Step instructions for ScopeFoundry Development on Windows
+# Step-by-Step on Windows
+## Instructions for ScopeFoundry Development on Windows
 
-* INSTALL ANACONDA 3 (Python latest version), only for your Windows User (who must be an Administrator), not for everyone. Pick a good directory, sometimes it will try to install deep within LocalSettings
+### Install Anaconda 3
+(Python latest version), only for your Windows User (who must be an Administrator), not for everyone. Pick a good directory, sometimes it will try to install deep within LocalSettings
 
-* INSTALL Git (for example using `conda install git`, or using the Source Tree software) and configure it.
-For example:
-	`git config --global user.name "Nobody Nobinov"`
-	`git config --global user.email "nnobinov@example.com"`
+
+### Set up Anaconda Enviroment
+
+```
+conda create --name scopefoundry anaconda=2019.07
+conda activate scopefoundry
+```
+
+### Install Git
+
+for example using `conda install git`, or using the Source Tree software) and configure it.
+
+Remember to configure your git user info:
+
+ ```
+ git config --global user.name "Nobody Nobinov"`
+ git config --global user.email "nnobinov@example.com"`
+ ```
+
+### Setup Experiment Repository
+
+Tree structure of a typical experiment repository
+
+	├── .git/								# Stores Git repository information
+	│   └── ...
+	├── ScopeFoundry/					# Local Sub-tree of ScopeFoundry
+	│   └── ...
+	├── ScopeFoundryHW/					# Local copies of ScopeFoundry hardware plugins
+	│   ├── virtual_function_gen/		# Local sub-tree of specific hardware plugin
+	│   └── ...
+	└── microscope_app.py
+	
 
 
 * Create a folder (main folder) where you are going to put the ScopeFoundry code. Open Anaconda Prompt (or Terminal) and go to that folder
@@ -27,9 +57,15 @@ For example:
 	```git subtree pull --prefix ScopeFoundry https://github.com/ScopeFoundry/ScopeFoundry.git master```
 
 
-* INSTALL ECLIPSE. It will require Java Development Kit JDK, to be installed or upgraded. During installation select Eclipse for Java Developers. 
-	* A useful way to do this step is to use [https://ninite.com/](). Select "Eclipse" and "JDK (AdoptOpenJDK) x64 11"
+### Install Eclipse
 
+Eclipse will require a Java Development Kit (JDK), to be installed or upgraded. 
+
+During installation of Eclipse select Eclipse for Java Developers. 
+
+Note: A useful way to automatically install eclipse: use [https://ninite.com/](). Select _Eclipse_ and _JDK (AdoptOpenJDK) x64 11_
+
+### Setup Eclipse with PyDev
 *  INSTALL PyDev in Eclipse. 
 	*  Use Help->Marketplace to install PyDev.
 
@@ -43,18 +79,20 @@ For example:
 	* Underv “Environment package” add variable `CONDA_DLL_SEARCH_MODIFICATION__ENABLE`, setting value = 1
 
 
-*  SETUP THE PYTHON PROJECT in one of the two following ways:
-		* Create A New Project
-		* Create a python project in Eclipse (New->Other->PyDev->PyDevProject) and add a new .py file to the project. 
-		* Make sure to select “Add project directory to the PYTHONPATH”
+### Setup the Python Project in Eclipse
+one of the two following ways:
+	* Create A New Project
+	* Create a python project in Eclipse (New->Other->PyDev->PyDevProject) and add a new .py file to the project. 
+	* Make sure to select “Add project directory to the PYTHONPATH”
 
-	* Use An Existing Code
-		* File -> Open Project From Filesystem
-		* Select the directory where your phyton code is.
-		* Right click on the newly created folder in Eclipse, select PyDev-> Set As PyDev Project
-		* Right click on the newly created folder in Eclipse, select PyDev-> Set as folder in PYTHONPATH
+* Use An Existing Code
+	* File -> Open Project From Filesystem
+	* Select the directory where your phyton code is.
+	* Right click on the newly created folder in Eclipse, select PyDev-> Set As PyDev Project
+	* Right click on the newly created folder in Eclipse, select PyDev-> Set as folder in PYTHONPATH
 
+### QT Creator
 * INSTALL QT Creator (use default options). This for interactive creation of QT user interface files (.ui)
-
+### More Information
 
 * Other ScopeFoundry resources are available on: [https://bitbucket.org/berkeleylab/foundry_scope/src/master/]() 
