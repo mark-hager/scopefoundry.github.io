@@ -1,18 +1,18 @@
 # Step-by-Step on Windows
 ## Instructions for ScopeFoundry Development on Windows
 
-### Install Anaconda 3
+## Install Anaconda 3
 (Python latest version), only for your Windows User (who must be an Administrator), not for everyone. Pick a good directory, sometimes it will try to install deep within LocalSettings
 
 
-### Set up Anaconda Enviroment
+## Set up Anaconda Enviroment
 
 ```
 conda create --name scopefoundry anaconda=2019.07
 conda activate scopefoundry
 ```
 
-### Install Git
+## Install Git
 
 for example using `conda install git`, or using the Source Tree software) and configure it.
 
@@ -23,7 +23,7 @@ Remember to configure your git user info:
  git config --global user.email "nnobinov@example.com"`
  ```
 
-### Setup Experiment Repository
+## Setup Experiment Repository
 
 Tree structure of a typical experiment repository
 
@@ -57,7 +57,7 @@ Tree structure of a typical experiment repository
 	```git subtree pull --prefix ScopeFoundry https://github.com/ScopeFoundry/ScopeFoundry.git master```
 
 
-### Install Eclipse
+## Install Eclipse
 
 Eclipse will require a Java Development Kit (JDK), to be installed or upgraded. 
 
@@ -65,7 +65,7 @@ During installation of Eclipse select Eclipse for Java Developers.
 
 Note: A useful way to automatically install eclipse: use [https://ninite.com/](). Select _Eclipse_ and _JDK (AdoptOpenJDK) x64 11_
 
-### Setup Eclipse with PyDev
+## Setup Eclipse with PyDev
 *  INSTALL PyDev in Eclipse. 
 	*  Use Help->Marketplace to install PyDev.
 
@@ -79,7 +79,7 @@ Note: A useful way to automatically install eclipse: use [https://ninite.com/]()
 	* Underv “Environment package” add variable `CONDA_DLL_SEARCH_MODIFICATION__ENABLE`, setting value = 1
 
 
-### Setup the Python Project in Eclipse
+## Setup the Python Project in Eclipse
 one of the two following ways:
 	* Create A New Project
 	* Create a python project in Eclipse (New->Other->PyDev->PyDevProject) and add a new .py file to the project. 
@@ -91,8 +91,8 @@ one of the two following ways:
 	* Right click on the newly created folder in Eclipse, select PyDev-> Set As PyDev Project
 	* Right click on the newly created folder in Eclipse, select PyDev-> Set as folder in PYTHONPATH
 
-### QT Creator
+## QT Creator
 * INSTALL QT Creator (use default options). This for interactive creation of QT user interface files (.ui)
-### More Information
+## More Information
 
 * Other ScopeFoundry resources are available on: [https://bitbucket.org/berkeleylab/foundry_scope/src/master/]() 
