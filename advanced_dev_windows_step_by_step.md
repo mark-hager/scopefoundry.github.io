@@ -76,7 +76,7 @@ Note: A useful way to automatically install eclipse: use [https://ninite.com/]()
 
 	* Under “Package” tab, select "Load conda var before run?"
 
-	* Underv “Environment package” add variable `CONDA_DLL_SEARCH_MODIFICATION__ENABLE`, setting value = 1
+	* Underv “Environment package” add variable `CONDA_DLL_SEARCH_MODIFICATION_ENABLE`, setting value = 1
 
 
 ## Setup the Python Project in Eclipse
