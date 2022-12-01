@@ -109,7 +109,7 @@ Step 3: Install hardware and measurement components
 Now, we will learn how to add piece of hardware to your microscope. We have a virtual function generator that acts like an analog input attached to a function generator that makes sine and square waves. Let's install this package which is available on the [ScopeFoundry GitHub][scopefoundry-github] project:
 
 ```
-(scopefoundry) $ pip install git+git://github.com/ScopeFoundry/HW_virtual_function_gen.git
+(scopefoundry) $ pip install git+https://github.com/ScopeFoundry/HW_virtual_function_gen.git
 ```
 
 Now python has access to the functions and modules provided by this package.
